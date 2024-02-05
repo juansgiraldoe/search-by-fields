@@ -29,7 +29,7 @@ const datosBusqueda = {
 // Eventos.
 document.addEventListener('DOMContentLoaded', ()=>{
   //Muestra los autos al cargar el dom.
-  mostrarAutos();
+  mostrarAutos(autos);
 
   //Llenar las opciones de años en el select.
   llenarSelect();
@@ -44,6 +44,7 @@ marca.addEventListener('change', e => {
 });
 year.addEventListener('change', e => {
   datosBusqueda.year = e.target.value
+  filtrarAuto();
 });
 minimo.addEventListener('change', e => {
   datosBusqueda.minimo = e.target.value
@@ -64,7 +65,10 @@ color.addEventListener('change', e => {
 
 
 //Funciones.
-function mostrarAutos() {
+function mostrarAutos(autos) {
+  
+  limpiarHtml();//Elimina el html previo.
+  
   autos.forEach( auto => {
     const autoHtml = document.createElement('P');
     
@@ -79,6 +83,13 @@ function mostrarAutos() {
   });
 };
 
+//Limpiar html.
+function limpiarHtml() {
+  while ( resultado.firstChild ) {
+    resultado.removeChild(resultado.firstChild)
+  }
+}
+
 //Genera los años del select de forma descendente..
 function llenarSelect() {
   for (let i = max; i >= min; i--) {
@@ -92,16 +103,23 @@ function llenarSelect() {
 //Filtrar en base a la busqueda.
 function filtrarAuto() {
   
-  const resultado = autos.filter(filtrarMarca)
-  console.log(resultado);
+  const resultado = autos.filter(filtrarMarca).filter(filtrarYear)
+  // console.log(resultado);
+  mostrarAutos(resultado)
 }
 
 function filtrarMarca(auto) {
-  const { marca, } = datosBusqueda;
-  if ( datosBusqueda.marca ) {
-    return auto.marca === datosBusqueda.marca;
+  const { marca } = datosBusqueda;
+  if ( marca ) {
+    return auto.marca === marca;
   }
   return auto;
 }
 
-
+function filtrarYear(auto) {
+  const { year } = datosBusqueda;
+  if ( year ) {
+    return auto.year === parseInt(year);
+  }
+  return auto;
+}
