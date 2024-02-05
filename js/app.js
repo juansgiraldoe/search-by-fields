@@ -110,7 +110,12 @@ function filtrarAuto() {
   
   const resultado = autos.filter(filtrarMarca).filter(filtrarYear).filter(filtrarMinimo).filter(filtrarMaximo).filter(filtrarPuertas).filter(filtrarTransmision).filter(filtrarColor)
   // console.log(resultado);
-  mostrarAutos(resultado)
+  
+  if ( resultado.length) {
+    mostrarAutos(resultado);
+  } else {
+    sinResultado();
+  }
 }
 
 function filtrarMarca(auto) {
@@ -160,10 +165,19 @@ function filtrarTransmision(auto) {
   }
   return auto;
 }
+
 function filtrarColor(auto) {
   const { color } = datosBusqueda;
   if ( color ) {
     return auto.color === color;
   }
   return auto;
+}
+
+function sinResultado() {
+  limpiarHtml();
+  const noresultado = document.createElement('DIV');
+  noresultado.classList.add('alerta', 'error');
+  noresultado.textContent = `No hay resultados para tu busqueda, intentalo de neuvo.`;
+  resultado.appendChild(noresultado)
 }
